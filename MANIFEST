@@ -1,0 +1,16 @@
+AUTHOR
+ChangeLog
+examples/GNOME_PerlAppletSample.server
+examples/perl-applet
+genmaps.pl
+Makefile.PL
+MANIFEST			This list of files
+MANIFEST.SKIP
+maps
+PanelApplet.pm
+panelappletperl.h
+README
+t/00.PanelApplet.t
+WARNING
+xs/Panel2.xs
+xs/PanelApplet.xs

@@ -1,0 +1,72 @@
+#!/usr/bin/perl
+
+#use strict;
+#use warnings;
+
+use Gtk2;
+use Gnome2;
+use Gnome2::PanelApplet;
+
+use constant TRUE	=> 1;
+use constant FALSE	=> 0;
+
+our $applet_menu_verbs = [
+	[
+		'Help', undef,
+	],
+	[
+		'Prefs', undef,
+	],
+	[
+		'About',
+		sub {
+			my $about = Gnome2::About->new('Hello, World!', '0.1',
+					"A useless, stupid, example of an Applet written in Perl",
+					"(C) 2003 Emmanuele Bassi",
+					"Emmanuele Bassi <emmanuele.bassi\@iol.it");
+			$about->show;
+		},
+	],
+];
+
+sub hello_applet_fill
+{
+	my $applet = shift;
+	my $message = shift;
+	
+	my $entry = Gtk2::Entry->new;
+	$entry->set_text($message);
+	
+	$applet->add($entry);
+	
+	$applet->setup_menu(<<MENU
+<popup name="button3">
+	<menuitem name="props" verb"Prefs" _label="_Preferences..."
+		  pixtype="stock" pixname="gtk-properties" />
+	<menuitem name="help_item" verb"Help" _label="_Help"
+		  pixtype="stock" pixname="gtk-help" />
+	<menuitem name="about_item" verb="About" _label="_About..."
+		  pixtype="stock" pixname="gnome-stock-about" />
+</popup>
+MENU
+		, $applet_menu_verbs);
+
+	$applet->show_all;
+
+	return TRUE;
+}
+
+Gnome2::PanelApplet->bonobo_factory("OAFIID:PerlSampleApplet_Factory",
+		"Gnome2::PanelApplet::Applet",
+		"A Stupid Applet Written in Perl",
+		"0",
+		sub {
+			my ($applet, $iid) = @_;
+			my $retval = FALSE;
+			if ('OAFIID:PerlSampleApplet' eq $iid)
+			{
+				$retval = hello_applet_fill($applet, 'Hello, World!');
+			}
+
+			return $retval;
+		});

@@ -1,0 +1,22 @@
+2004/01/30 21:27 (+0100) ebassi
+	
+	* Makefile.PL: print the warning.
+	
+	* Initial release: still pre-alpha code; the module compiles fine, but
+	when called, the test applet dies with no apparent reason.
+
+	A AUTHOR
+	A ChangeLog
+	A examples/GNOME_PerlAppletSample.server
+	A examples/perl-applet
+	A Makefile.PL
+	A MANIFEST
+	A MANIFEST.SKIP
+	A maps
+	A PanelApplet.pm
+	A panelappletperl.h
+	A README
+	A t/00.PanelApplet.t
+	A WARNING
+	A xs/Panel2.xs
+	A xs/PanelApplet.xs
