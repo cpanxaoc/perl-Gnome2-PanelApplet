@@ -1,3 +1,7 @@
+2004/02/26 17:37 (-0500) muppetman
+
+	* README: fix the spelling of license; update the sandbox instructions.
+
 2004/02/06 09:42 (+0100) ebassi
 	
 	* examples/GNOME_PerlAppletSample.server: remove absolute path
