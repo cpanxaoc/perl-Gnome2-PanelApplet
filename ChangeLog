@@ -1,3 +1,9 @@
+2004/03/14 23:58 (+0100) ebassi
+
+	* xs/Panel2.xs,
+	  t/00.PanelApplet.t: Adapt to the new version information
+	implementation policy.
+
 2004/02/26 17:37 (-0500) muppetman
 
 	* README: fix the spelling of license; update the sandbox instructions.

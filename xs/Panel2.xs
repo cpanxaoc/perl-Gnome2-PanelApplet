@@ -32,10 +32,10 @@ BOOT:
 
 
 =for apidoc
-=signature (major_version, minor_version, micro_version) = Gnome2::Panel->version_info
+=signature (major_version, minor_version, micro_version) = Gnome2::Panel::GET_VERSION_INFO
 =cut
 void
-panel_applet_get_version_info (class)
+GET_VERSION_INFO (class)
     PPCODE:
 	EXTEND (SP, 3);
 	PUSHs (sv_2mortal (newSViv (PANEL_APPLET_MAJOR_VERSION)));
@@ -43,7 +43,7 @@ panel_applet_get_version_info (class)
 	PUSHs (sv_2mortal (newSViv (PANEL_APPLET_MICRO_VERSION)));
 
 gboolean
-panel_applet_check_version (class, major, minor, micro)
+CHECK_VERSION (class, major, minor, micro)
 	int major
 	int minor
 	int micro
