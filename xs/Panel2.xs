@@ -32,7 +32,7 @@ BOOT:
 
 
 =for apidoc
-=signature (major_version, minor_version, micro_version) = Gnome2::Panel::GET_VERSION_INFO
+=signature (major_version, minor_version, micro_version) = Gnome2::Panel->GET_VERSION_INFO
 =cut
 void
 GET_VERSION_INFO (class)
