@@ -1,3 +1,10 @@
+2004/02/06 09:42 (+0100) ebassi
+	
+	* examples/GNOME_PerlAppletSample.server: remove absolute path
+	
+	* t/00.PanelApplet.t: fix the module's name (patch by Torsten
+	Schoenfeld)
+
 2004/01/30 21:27 (+0100) ebassi
 	
 	* Makefile.PL: print the warning.
