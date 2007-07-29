@@ -1,34 +1,54 @@
-Gnome2::Panel version 0.01
-==========================
+package Gnome2::PanelApplet;
 
-This module allows you to create applets for the GNOME 2.0 Panel using Perl.
+# $Id$
 
-INSTALLATION
-------------
+use 5.008;
+use strict;
+use warnings;
 
-To install this module type the following:
+use Gnome2;
 
-   perl Makefile.PL
-   make
-   make test
-   make install
+require DynaLoader;
 
-DEPENDENCIES
-------------
+our @ISA = qw(DynaLoader);
 
-This module requires these other modules and libraries:
+our $VERSION = '0.01';
 
-  perl                >= 5.8.0
-  ExtUtils::Depends   >= 0.20  (Perl module)
-  ExtUtils::PkgConfig >= 1.03  (Perl module)
-  Glib                >= 1.040 (Perl module and requisite C libraries)
-  Gtk2                >= 1.040 (Perl module and requisite C libraries)
-  Gnome2              >= 1.040 (Perl module and requisite C libraries)
-  libpanelapplet-2.0  >= 2.0   (C library)
+sub import {
+  my $self = shift();
+  $self -> VERSION(@_);
+}
 
+sub dl_load_flags { 0x01 }
 
-COPYRIGHT AND LICENSE
----------------------
+Gnome2::PanelApplet -> bootstrap($VERSION);
+
+1;
+__END__
+
+=head1 NAME
+
+Gnome2::PanelApplet - Perl interface to GNOME's applet library
+
+=head1 SYNOPSIS
+
+  ...
+
+=head1 ABSTRACT
+
+...
+
+=head1 SEE ALSO
+
+L<Gnome2::PanelApplet::index>, L<Gnome2>, L<Gtk2>, L<Gtk2::api> and
+L<http://developer.gnome.org/doc/API/2.0/panel-applet/>.
+
+=head1 AUTHOR
+
+Emmanuele Bassi E<lt>emmanuele.bassi at iol dot itE<gt>
+Torsten Schoenfeld E<lt>kaffeetisch at gmx dot deE<gt>
+
+=head1 COPYRIGHT AND LICENSE
 
 Copyright (C) 2003, 2007 by the gtk2-perl team
 
@@ -45,3 +65,5 @@ details.
 You should have received a copy of the GNU Lesser General Public License along
 with this library; if not, write to the Free Software Foundation, Inc., 51
 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+
+=cut

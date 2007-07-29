@@ -7,7 +7,7 @@
     <oaf_attribute name="name" type="string" value="Hello World Applet"/>
     <oaf_attribute name="description" type="string" value="Factory for the Hello World applet"/>
   </oaf_server>
-  
+
   <oaf_server iid="OAFIID:PerlSampleApplet" type="factory" location="OAFIID:PerlSampleApplet_Factory">
     <oaf_attribute name="repo_ids" type="stringv">
       <item value="IDL:GNOME/Vertigo/PanelAppletShell:1.0"/>
@@ -16,7 +16,7 @@
     </oaf_attribute>
     <oaf_attribute name="name" type="string" value="Hello World!"/>
     <oaf_attribute name="description" type="string" value="Stupid Hello World in Perl"/>
-    <oaf_attribute name="panel:category" type="string" value="Utility"/>
+    <oaf_attribute name="panel:category" type="string" value="Amusements"/>
     <oaf_attribute name="panel:icon" type="string" value="bug-buddy.png"/>
   </oaf_server>
 </oaf_info>
