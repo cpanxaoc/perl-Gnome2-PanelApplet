@@ -1,3 +1,17 @@
+2007-07-30	kaffeetisch
+
+	* libpanelapplet-perl.h
+	* maps
+	* xs/PanelApplet.xs: Wrap the rest of the panel API.
+	panel_applet_gconf_* is still missing.
+
+	* t/GNOME_PerlAppletTest.server
+	* t/test-applet: Add interactive test.
+
+	* examples/perl-applet: Tell emacs that this is UTF-8.
+
+	* t/00.PanelApplet.t: Add shebang line.
+
 2007-07-29	kaffeetisch
 
 	The return of Gnome2::PanelApplet.

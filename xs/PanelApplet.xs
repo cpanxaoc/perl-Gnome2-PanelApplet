@@ -23,6 +23,60 @@
 
 /* ------------------------------------------------------------------------- */
 
+GType
+panel_perl_applet_orient_get_type (void)
+{
+	static GType type = 0;
+
+	if (!type) {
+		static const GEnumValue values[] = {
+			{ PANEL_APPLET_ORIENT_UP, "PANEL_APPLET_ORIENT_UP", "up" },
+			{ PANEL_APPLET_ORIENT_DOWN, "PANEL_APPLET_ORIENT_DOWN", "down" },
+			{ PANEL_APPLET_ORIENT_LEFT, "PANEL_APPLET_ORIENT_LEFT", "left" },
+			{ PANEL_APPLET_ORIENT_RIGHT, "PANEL_APPLET_ORIENT_RIGHT", "right" },
+			{ 0, NULL, NULL }
+		};
+		type = g_enum_register_static ("PanelAppletOrient", values);
+	}
+
+	return type;
+}
+
+/* The second argument to the change-orient signal is declared as gint, but is
+ * actually PanelAppletOrient.  So we need a custom signal marshaller.
+ */
+static void
+change_orient_marshal (GClosure *closure,
+                       GValue *return_value,
+                       guint n_param_values,
+                       const GValue *param_values,
+                       gpointer invocation_hint,
+                       gpointer marshal_data)
+{
+	dGPERL_CLOSURE_MARSHAL_ARGS;
+
+	GPERL_CLOSURE_MARSHAL_INIT (closure, marshal_data);
+
+	ENTER;
+	SAVETMPS;
+
+	PUSHMARK (SP);
+
+	GPERL_CLOSURE_MARSHAL_PUSH_INSTANCE (param_values);
+	XPUSHs (sv_2mortal (newSVPanelAppletOrient (
+			      g_value_get_uint (param_values + 1))));
+	GPERL_CLOSURE_MARSHAL_PUSH_DATA;
+
+	PUTBACK;
+
+	GPERL_CLOSURE_MARSHAL_CALL (G_DISCARD);
+
+	FREETMPS;
+	LEAVE;
+}
+
+/* ------------------------------------------------------------------------- */
+
 static GPerlCallback *
 factory_callback_create (SV *func, SV *data)
 {
@@ -89,7 +143,7 @@ verb_func (BonoboUIComponent *component,
 /* ------------------------------------------------------------------------- */
 
 static BonoboUIVerb *
-SvBonoboUIVerbList (SV *sv, SV *default_data)
+sv_to_verb_list (SV *sv, SV *default_data)
 {
 	HV *hv;
 	HE *he;
@@ -143,6 +197,24 @@ SvBonoboUIVerbList (SV *sv, SV *default_data)
 	return verb_list;
 }
 
+static void
+destroy_verb_list (BonoboUIVerb *verb_list)
+{
+	BonoboUIVerb *verb;
+
+	warn ("verb list %p ...", verb_list);
+
+	/* verb_list is NULL-terminated */
+	for (verb = verb_list; verb != NULL; verb++) {
+		GPerlCallback *callback = verb->user_data;
+		warn ("  freeing associated callback %p", callback);
+		gperl_callback_destroy (callback);
+	}
+
+	warn ("  freeing the verb list itself");
+	g_free (verb_list);
+}
+
 /* ------------------------------------------------------------------------- */
 
 MODULE = Gnome2::PanelApplet	PACKAGE = Gnome2::PanelApplet	PREFIX = panel_applet_
@@ -150,9 +222,86 @@ MODULE = Gnome2::PanelApplet	PACKAGE = Gnome2::PanelApplet	PREFIX = panel_applet
 BOOT:
 #include "register.xsh"
 #include "boot.xsh"
+	gperl_signal_set_marshaller_for (PANEL_TYPE_APPLET, "change-orient",
+	                                 change_orient_marshal);
 
 =for object Gnome2::PanelApplet::main
 =cut
+
+# FIXME: Segfaults for me in some locking function.
+# GtkWidget * panel_applet_new (void);
+# GtkWidget_ornull *
+# panel_applet_new (class)
+#     C_ARGS:
+# 	/* void */
+
+PanelAppletOrient panel_applet_get_orient (PanelApplet *applet);
+
+guint panel_applet_get_size (PanelApplet *applet);
+
+# PanelAppletBackgroundType panel_applet_get_background (PanelApplet *applet, GdkColor *color, GdkPixmap **pixmap);
+void
+panel_applet_get_background (PanelApplet *applet)
+    PREINIT:
+	PanelAppletBackgroundType type;
+	GdkColor color;
+	GdkPixmap *pixmap = NULL;
+    PPCODE:
+	type = panel_applet_get_background (applet, &color, &pixmap);
+	EXTEND (sp, 3);
+	PUSHs (sv_2mortal (newSVPanelAppletBackgroundType (type)));
+	switch (type) {
+	    case PANEL_NO_BACKGROUND:
+		PUSHs (&PL_sv_undef);
+		PUSHs (&PL_sv_undef);
+	    case PANEL_COLOR_BACKGROUND:
+		PUSHs (sv_2mortal (newSVGdkColor_copy (&color)));
+		PUSHs (&PL_sv_undef);
+	    case PANEL_PIXMAP_BACKGROUND:
+		PUSHs (&PL_sv_undef);
+		PUSHs (sv_2mortal (newSVGdkPixmap_noinc (pixmap)));
+	}
+
+gchar_own_ornull * panel_applet_get_preferences_key (PanelApplet *applet);
+
+=for apidoc __gerror__
+=cut
+# void panel_applet_add_preferences (PanelApplet *applet, const gchar *schema_dir, GError **opt_error);
+void
+panel_applet_add_preferences (PanelApplet *applet, const gchar *schema_dir)
+    PREINIT:
+	GError *opt_error = NULL;
+    CODE:
+	panel_applet_add_preferences (applet, schema_dir, &opt_error);
+	if (opt_error)
+		gperl_croak_gerror (NULL, opt_error);
+
+PanelAppletFlags panel_applet_get_flags (PanelApplet *applet);
+
+void panel_applet_set_flags (PanelApplet *applet, PanelAppletFlags flags);
+
+# void panel_applet_set_size_hints (PanelApplet *applet, const int *size_hints, int n_elements, int base_size);
+void
+panel_applet_set_size_hints (PanelApplet *applet, SV *size_hints, int base_size)
+    PREINIT:
+	AV *av;
+	int *real_size_hints, n_elements, i;
+    CODE:
+	if (! (SvOK (size_hints) && SvRV (size_hints) && SvTYPE (SvRV (size_hints)) == SVt_PVAV))
+		croak ("size hints must be an array reference");
+	av = (AV *) SvRV (size_hints);
+	n_elements = av_len (av) + 1;
+	real_size_hints = g_new0 (int, n_elements);
+	for (i = 0; i < n_elements; i++) {
+		SV **svp = av_fetch (av, i, 0);
+		if (svp && SvOK (*svp))
+			real_size_hints[i] = SvIV (*svp);
+	}
+	panel_applet_set_size_hints (applet, real_size_hints, n_elements, base_size);
+
+# FIXME: These need bonobo bindings.
+# BonoboControl * panel_applet_get_control (PanelApplet *applet);
+# BonoboUIComponent * panel_applet_get_popup_component (PanelApplet *applet);
 
 # void panel_applet_setup_menu (PanelApplet *applet, const gchar *xml, const BonoboUIVerb *verb_list, gpointer user_data);
 void
@@ -160,9 +309,40 @@ panel_applet_setup_menu (PanelApplet *applet, const gchar *xml, SV *verb_list, S
     PREINIT:
 	BonoboUIVerb *real_verb_list;
     CODE:
-	real_verb_list = SvBonoboUIVerbList (verb_list, default_data);
+	real_verb_list = sv_to_verb_list (verb_list, default_data);
+	/* We pass NULL for user_data here since, if it's non-NULL,
+	 * panel_applet_setup_menu prefers it over the user data in the verbs.
+	 * But that's where our GPerlCallbacks are, so we can't let that
+	 * happen. */
 	panel_applet_setup_menu (applet, xml, real_verb_list, NULL);
-	/* FIXME: Free real_verb_list when applet dies of old age. */
+	/* FIXME: Looks like destroy_verb_list is never called.  Do we leak the
+	 * whole applet? */
+	g_object_set_data_full (G_OBJECT (applet),
+			        "panel-perl-verb-list-key",
+			        real_verb_list,
+				(GDestroyNotify) destroy_verb_list);
+
+# void panel_applet_setup_menu_from_file (PanelApplet *applet, const gchar *opt_datadir, const gchar *file, const gchar *opt_app_name, const BonoboUIVerb *verb_list, gpointer user_data);
+void
+panel_applet_setup_menu_from_file (applet, opt_datadir, file, opt_app_name, verb_list, default_data=NULL)
+	PanelApplet *applet
+	const gchar_ornull *opt_datadir
+	const gchar *file
+	const gchar_ornull *opt_app_name
+	SV *verb_list
+	SV *default_data
+    PREINIT:
+	BonoboUIVerb *real_verb_list;
+    CODE:
+	real_verb_list = sv_to_verb_list (verb_list, default_data);
+	/* See comment above for an explanation for the NULL user data. */
+	panel_applet_setup_menu_from_file (applet, opt_datadir, file, opt_app_name, real_verb_list, NULL);
+	g_object_set_data_full (G_OBJECT (applet),
+			        "panel-perl-verb-list-key",
+			        real_verb_list,
+				(GDestroyNotify) destroy_verb_list);
+
+# --------------------------------------------------------------------------- #
 
 MODULE = Gnome2::PanelApplet	PACKAGE = Gnome2::PanelApplet::Factory	PREFIX = panel_applet_factory_
 
