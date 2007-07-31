@@ -1,3 +1,10 @@
+2007-07-31	kaffeetisch
+
+	* lib/Gnome2/PanelApplet.pm
+	* PanelApplet.xs: Add documentation.
+
+	* Makefile.PL: Add a reminder to bump the required Glib version.
+
 2007-07-30	kaffeetisch
 
 	* libpanelapplet-perl.h

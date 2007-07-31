@@ -32,11 +32,45 @@ Gnome2::PanelApplet - Perl interface to GNOME's applet library
 
 =head1 SYNOPSIS
 
-  ...
+  # Initialize.
+  Gnome2::Program->init ('My Applet', '0.01');
+
+  # Register our applet with that bonobo thingy.  The OAFIID stuff is
+  # specified in a .server file.  See
+  # C<examples/GNOME_PerlAppletSample.server> in the
+  # I<Gnome2::PanelApplet> tarball for an example.
+  Gnome2::PanelApplet::Factory->main (
+    'OAFIID:PerlSampleApplet_Factory', # iid of the applet
+    'Gnome2::PanelApplet',             # type of the applet
+    \&fill                             # sub that populates the applet
+  );
+
+  sub fill {
+    my ($applet, $iid, $data) = @_;
+
+    # Safety measure: if we're passed the wrong IID, just return.
+    if ($iid ne 'OAFIID:PerlSampleApplet') {
+      return FALSE;
+    }
+
+    # Gnome2::PanelApplet isa Gtk2::EventBox, so it isa Gtk2::Container
+    # in particular.  That means we can call add() on it.
+    my $label = Gtk2::Label->new ('Hi, there!');
+    $applet->add ($label);
+    $applet->show_all;
+
+    return TRUE;
+  }
 
 =head1 ABSTRACT
 
-...
+Use Perl to write GNOME applets that sit on the panel.
+
+=head1 DOCUMENTATION
+
+I<Gnome2::PanelApplet::Factory-E<gt>main> is documented in
+L<Gnome2::PanelApplet::Factory>.  The methods you can call on the applet
+instance are documented in L<Gnome2::PanelApplet::main>.
 
 =head1 SEE ALSO
 
@@ -46,6 +80,7 @@ L<http://developer.gnome.org/doc/API/2.0/panel-applet/>.
 =head1 AUTHOR
 
 Emmanuele Bassi E<lt>emmanuele.bassi at iol dot itE<gt>
+
 Torsten Schoenfeld E<lt>kaffeetisch at gmx dot deE<gt>
 
 =head1 COPYRIGHT AND LICENSE

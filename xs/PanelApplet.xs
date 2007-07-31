@@ -225,7 +225,7 @@ BOOT:
 	gperl_signal_set_marshaller_for (PANEL_TYPE_APPLET, "change-orient",
 	                                 change_orient_marshal);
 
-=for object Gnome2::PanelApplet::main
+=for object Gnome2::PanelApplet::main (Gnome2::PanelApplet)
 =cut
 
 # FIXME: Segfaults for me in some locking function.
@@ -239,6 +239,13 @@ PanelAppletOrient panel_applet_get_orient (PanelApplet *applet);
 
 guint panel_applet_get_size (PanelApplet *applet);
 
+=for apidoc
+
+=for signature (type, color, pixmap) = $applet->get_background
+
+Depending on I<type>, I<color> or I<pixmap>, or both, may be I<undef>.
+
+=cut
 # PanelAppletBackgroundType panel_applet_get_background (PanelApplet *applet, GdkColor *color, GdkPixmap **pixmap);
 void
 panel_applet_get_background (PanelApplet *applet)
@@ -303,6 +310,58 @@ panel_applet_set_size_hints (PanelApplet *applet, SV *size_hints, int base_size)
 # BonoboControl * panel_applet_get_control (PanelApplet *applet);
 # BonoboUIComponent * panel_applet_get_popup_component (PanelApplet *applet);
 
+=for apidoc
+
+This method sets up menu entries for your applet and binds them to callbacks.
+The XML for C<$xml> needs to have the following format:
+
+  <popup name="button3">
+    <menuitem name="Properties Item"
+              verb="Properties"
+              _label="Properties ..."
+              pixtype="stock"
+              pixname="gtk-properties"/>
+    <menuitem name="Help Item"
+              verb="Help"
+              _label="Help"
+              pixtype="stock"
+              pixname="gtk-help"/>
+    <menuitem name="About Item"
+              verb="About"
+              _label="About ..."
+              pixtype="stock"
+              pixname="gnome-stock-about"/>
+  </popup>
+
+The verbs specified in this description can be mapped to callbacks in the
+C<$verb_list>:
+
+  $verb_list = {
+    Properties => [\&properties_callback, 'data'],
+    Help => \&help_callback,
+    About => sub { about_callback(@_) },
+  };
+
+As you can see, the usual ways of specifying callbacks can be used:
+
+=over
+
+=item o Bare code references as in C<\&help_callback>
+
+=item o Code references with data as in C<[\&properties_callback, 'data']>
+
+=item o Closures as in C<sub { about_callback(@_) }>
+
+=back
+
+If you use the first or last form, i.e. if you don't specify user data, the
+callback will be passed C<$default_data>.
+
+The callbacks will be passed three arguments: the bonobo component they belong
+to, the user data, and the verb they were installed for.  Currently, the bonobo
+component will always be C<undef>, since we have no bonobo Perl bindings yet.
+
+=cut
 # void panel_applet_setup_menu (PanelApplet *applet, const gchar *xml, const BonoboUIVerb *verb_list, gpointer user_data);
 void
 panel_applet_setup_menu (PanelApplet *applet, const gchar *xml, SV *verb_list, SV *default_data=NULL)

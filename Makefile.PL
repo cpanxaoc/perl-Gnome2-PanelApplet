@@ -15,7 +15,7 @@ our %build_reqs = (
 our %perl_reqs = (
   'ExtUtils::Depends'   => '0.20',
   'ExtUtils::PkgConfig' => '1.03',
-  'Glib'                => '1.040',
+  'Glib'                => '1.040', # FIXME: Bump to 1.153 once it's out.
   'Gtk2'                => '1.040',
   'Gnome2'              => '1.040',
 );
