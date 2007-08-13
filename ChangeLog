@@ -6,6 +6,11 @@
 	* README: Require Glib >= 1.053 and Gnome2 >= 1.042 for new
 	features.
 
+	* examples/perl-applet
+	* lib/Gnome2/PanelApplet.pm
+	* t/test-applet: Use sm_connect => FALSE in the examples and
+	tests.
+
 2007-07-31	kaffeetisch
 
 	* lib/Gnome2/PanelApplet.pm

@@ -16,7 +16,8 @@ use Test::More qw(no_plan);
 use Glib qw(:constants);
 use Gnome2::PanelApplet;
 
-Gnome2::Program->init ('Perl Test Applet', '0.01');
+Gnome2::Program->init ('Perl Test Applet', '0.01', 'libgnomeui',
+                       sm_connect => FALSE);
 
 Gnome2::PanelApplet::Factory->main ('OAFIID:PerlTestApplet_Factory',
                                     'Gnome2::PanelApplet',

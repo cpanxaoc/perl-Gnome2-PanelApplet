@@ -33,7 +33,8 @@ Gnome2::PanelApplet - Perl interface to GNOME's applet library
 =head1 SYNOPSIS
 
   # Initialize.
-  Gnome2::Program->init ('My Applet', '0.01');
+  Gnome2::Program->init ('My Applet', '0.01', 'libgnomeui'
+                         sm_connect => FALSE);
 
   # Register our applet with that bonobo thingy.  The OAFIID stuff is
   # specified in a .server file.  See
