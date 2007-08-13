@@ -1,5 +1,10 @@
 2007-08-13	kaffeetisch
 
+	* MANIFEST
+	* NEWS: Release 0.01.
+
+2007-08-13	kaffeetisch
+
 	* MANIFEST: Add t/GNOME_PerlAppletTest.server and t/test-applet.
 
 	* Makefile.PL
