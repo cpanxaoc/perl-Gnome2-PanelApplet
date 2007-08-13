@@ -1,5 +1,7 @@
 2007-08-13	kaffeetisch
 
+	* MANIFEST: Add t/GNOME_PerlAppletTest.server and t/test-applet.
+
 	* Makefile.PL
 	* README: Require Glib >= 1.053 and Gnome2 >= 1.042 for new
 	features.
