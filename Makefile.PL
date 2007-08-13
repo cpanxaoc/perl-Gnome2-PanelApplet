@@ -15,9 +15,9 @@ our %build_reqs = (
 our %perl_reqs = (
   'ExtUtils::Depends'   => '0.20',
   'ExtUtils::PkgConfig' => '1.03',
-  'Glib'                => '1.040', # FIXME: Bump to 1.153 once it's out.
+  'Glib'                => '1.053',
   'Gtk2'                => '1.040',
-  'Gnome2'              => '1.040',
+  'Gnome2'              => '1.042',
 );
 
 unless (eval "use ExtUtils::Depends '$perl_reqs{'ExtUtils::Depends'}';"

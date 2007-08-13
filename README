@@ -21,9 +21,9 @@ This module requires these other modules and libraries:
   perl                >= 5.8.0
   ExtUtils::Depends   >= 0.20  (Perl module)
   ExtUtils::PkgConfig >= 1.03  (Perl module)
-  Glib                >= 1.040 (Perl module and requisite C libraries)
+  Glib                >= 1.053 (Perl module and requisite C libraries)
   Gtk2                >= 1.040 (Perl module and requisite C libraries)
-  Gnome2              >= 1.040 (Perl module and requisite C libraries)
+  Gnome2              >= 1.042 (Perl module and requisite C libraries)
   libpanelapplet-2.0  >= 2.0   (C library)
 
 
