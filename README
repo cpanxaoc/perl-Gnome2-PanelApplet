@@ -24,6 +24,7 @@ This module requires these other modules and libraries:
   Glib                >= 1.053 (Perl module and requisite C libraries)
   Gtk2                >= 1.040 (Perl module and requisite C libraries)
   Gnome2              >= 1.042 (Perl module and requisite C libraries)
+  Gnome2::GConf       >= 1.044 (Perl module and requisite C libraries)
   libpanelapplet-2.0  >= 2.0   (C library)
 
 

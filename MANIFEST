@@ -17,3 +17,4 @@ t/00.PanelApplet.t
 t/GNOME_PerlAppletTest.server
 t/test-applet
 xs/PanelApplet.xs
+xs/PanelAppletGConf.xs

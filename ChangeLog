@@ -1,3 +1,13 @@
+2007-09-28	kaffeetisch
+
+	* MANIFEST
+	* Makefile.PL
+	* README
+	* libpanelapplet-perl.h
+	* lib/Gnome2/PanelApplet.pm
+	* t/test-applet
+	* xs/PanelAppletGConf.xs: Wrap the gconf helper API.
+
 2007-08-14	kaffeetisch
 
 	* Makefile.PL: Require Glib >= 1.153, not 1.053.  Doh.  (Reported

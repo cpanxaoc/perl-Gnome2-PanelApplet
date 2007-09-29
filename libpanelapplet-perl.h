@@ -22,9 +22,11 @@
 #define _LIBPANELAPPLET_PERL_H_
 
 #include <gnome2perl.h>
+#include <gconfperl.h>
 
 #include <panel-applet.h>
 #include <panel-applet-enums.h>
+#include <panel-applet-gconf.h>
 
 /* Custom GType for the panel orientations. */
 #define PANEL_PERL_TYPE_PANEL_APPLET_ORIENT panel_perl_applet_orient_get_type()

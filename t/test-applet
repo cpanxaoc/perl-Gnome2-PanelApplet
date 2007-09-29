@@ -35,6 +35,7 @@ sub fill {
   <menuitem name="TestUno Item" verb="TestUno" _label="Test I ..."/>
   <menuitem name="TestDos Item" verb="TestDos" _label="Test II ..."/>
   <menuitem name="TestTres Item" verb="TestTres" _label="Test III ..."/>
+  <menuitem name="TestCuatro Item" verb="TestCuatro" _label="Test IV ..."/>
 </popup>
 EOX
 
@@ -42,6 +43,7 @@ EOX
     TestUno => [\&test_one, 'default!'],
     TestDos => \&test_two,
     TestTres => \&test_three,
+    TestCuatro => \&test_four,
   };
 
   $applet->setup_menu($menu_xml, $cb_mapping, $applet);
@@ -113,7 +115,7 @@ sub test_two {
 
   diag 'pref key: ' . $applet->get_preferences_key;
 
-  eval { $applet->add_preferences('/schemas/apps/metacity'); };
+  eval { $applet->add_preferences ('/schemas/apps/metacity'); };
   diag 'result of add_preferences: ' . ($@ ? $@ : 'all ok');
 
   $applet->set_flags ([qw/expand-major has-handle/]);
@@ -140,7 +142,7 @@ sub test_three {
   $dialog->destroy;
 
   my $loop = Glib::MainLoop->new;
-  $applet->signal_connect(change_orient => sub {
+  $applet->signal_connect (change_orient => sub {
     my ($applet_inside, $orient, $data) = @_;
 
     is ($applet_inside, $applet, 'the applet object made it');
@@ -150,6 +152,41 @@ sub test_three {
     $loop->quit;
   }, 'bla');
   $loop->run;
+
+  _show_results ($$output_ref);
+}
+
+sub test_four {
+  my ($component, $applet, $verb) = @_;
+
+  my $output_ref = _setup_output (my $fh);
+
+  diag 'full key: ', $applet->gconf_get_full_key ('test_key');
+
+  my $string = { type => 'string',
+                 value => 'Bla!' };
+  $applet->gconf_set_value ('string_key', $string);
+  is (($applet->gconf_get_value ('string_key'))->{value}, 'Bla!');
+
+  my $list = { type => 'string',
+               value => ['Blub!', 'Bla!'] };
+  $applet->gconf_set_value ('list_key', $list);
+  is_deeply (($applet->gconf_get_value ('list_key'))->{value}, ['Blub!', 'Bla!']);
+
+  $applet->gconf_set_list ('list_key', 'string', ['Blub!', 'Bla!']);
+  is_deeply ($applet->gconf_get_list ('list_key'), ['Blub!', 'Bla!']);
+
+  $applet->gconf_set_bool ('bool_key', TRUE);
+  is ($applet->gconf_get_bool ('bool_key'), TRUE);
+
+  $applet->gconf_set_int ('int_key', 23);
+  is ($applet->gconf_get_int ('int_key'), 23);
+
+  $applet->gconf_set_string ('string_key', '!Bla');
+  is ($applet->gconf_get_string ('string_key'), '!Bla');
+
+  $applet->gconf_set_float ('_key', 2.0);
+  is ($applet->gconf_get_float ('_key'), 2.0);
 
   _show_results ($$output_ref);
 }
