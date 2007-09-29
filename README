@@ -1,4 +1,4 @@
-Gnome2::Panel version 0.01
+Gnome2::Panel version 0.02
 ==========================
 
 This module allows you to create applets for the GNOME 2.0 Panel using Perl.
