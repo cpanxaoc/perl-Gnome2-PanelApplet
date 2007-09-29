@@ -8,6 +8,9 @@
 	* t/test-applet
 	* xs/PanelAppletGConf.xs: Wrap the gconf helper API.
 
+	* Makefile.PL
+	* README: Require Glib 1.160.
+
 2007-08-14	kaffeetisch
 
 	* Makefile.PL: Require Glib >= 1.153, not 1.053.  Doh.  (Reported
