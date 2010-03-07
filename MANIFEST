@@ -12,6 +12,7 @@ MANIFEST			This list of files
 MANIFEST.SKIP
 maps
 NEWS
+perl-Gnome2-PanelApplet.doap
 README
 t/00.PanelApplet.t
 t/GNOME_PerlAppletTest.server
