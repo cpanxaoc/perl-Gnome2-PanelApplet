@@ -4,8 +4,8 @@ blib
 \.bs$
 build
 \.c$
-CVS
-\.cvsignore$
+\.git
+\.gitignore$
 Makefile$
 Makefile\.old$
 \.o$
