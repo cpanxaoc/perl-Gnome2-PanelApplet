@@ -38,7 +38,16 @@ unless (eval "use ExtUtils::Depends '$perl_reqs{'ExtUtils::Depends'}';"
   exit 1; # not reached
 }
 
-my %pkgcfg = ExtUtils::PkgConfig->find("libpanelapplet-2.0 >= $build_reqs{'libpanelapplet-2.0'}");
+# If the package can't be found, warn and exit with status 0 to indicate to
+# CPAN testers that their system is not supported.
+my %pkgcfg;
+unless (eval { %pkgcfg = ExtUtils::PkgConfig->find (
+                 "libpanelapplet-2.0 >= $build_reqs{'libpanelapplet-2.0'}");
+	       1; })
+{
+	warn $@;
+	exit 0;
+}
 
 mkdir 'build', 0777;
 
@@ -73,6 +82,11 @@ WriteMakefile(
   XSPROTOARG    => '-noprototypes',
   MAN3PODS      => \%pod_files,
   PREREQ_PM     => \%perl_reqs,
+
+  META_MERGE    => {
+    configure_requires => \%perl_reqs,
+  },
+
   $dep->get_makefile_vars,
 );
 
