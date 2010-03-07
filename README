@@ -1,5 +1,5 @@
-Gnome2::Panel version 0.02
-==========================
+Gnome2::Panel
+=============
 
 This module allows you to create applets for the GNOME 2.0 Panel using Perl.
 
@@ -31,7 +31,7 @@ This module requires these other modules and libraries:
 COPYRIGHT AND LICENSE
 ---------------------
 
-Copyright (C) 2003, 2007 by the gtk2-perl team
+Copyright (C) 2003, 2007, 2010 by the gtk2-perl team
 
 This library is free software; you can redistribute it and/or modify it under
 the terms of the GNU Lesser General Public License as published by the Free
