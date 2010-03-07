@@ -1,17 +1,16 @@
-#!/usr/bin/perl
+#!/opt/perl-5.10.1/bin/perl
 # -*- coding: utf-8 -*-
+
+# Uncomment and modify this and the shebang above if you have the Perl modules
+# in a custom directory and the panel's environment isn't set up so that perl
+# can find them.
+use lib qw(/opt/perl-5.10.1-lib/lib/perl5);
+
 use strict;
 use warnings;
 use utf8;
 
 use Test::More qw(no_plan);
-
-# Uncomment and modify this if you have the Perl modules in a custom directory
-# and the panel's environment isn't set up so that perl can find them.
-# use lib qw(/opt/perl/share/perl
-#            /opt/perl/lib
-#            /opt/perl/lib/perl
-#            /opt/perl/lib/perl/site_perl);
 
 use Glib qw(:constants);
 use Gnome2::PanelApplet;
@@ -36,6 +35,7 @@ sub fill {
   <menuitem name="TestDos Item" verb="TestDos" _label="Test II ..."/>
   <menuitem name="TestTres Item" verb="TestTres" _label="Test III ..."/>
   <menuitem name="TestCuatro Item" verb="TestCuatro" _label="Test IV ..."/>
+  <menuitem name="TestCinco Item" verb="TestCinco" _label="Test V ..."/>
 </popup>
 EOX
 
@@ -44,6 +44,7 @@ EOX
     TestDos => \&test_two,
     TestTres => \&test_three,
     TestCuatro => \&test_four,
+    TestCinco => \&test_five,
   };
 
   $applet->setup_menu($menu_xml, $cb_mapping, $applet);
@@ -187,6 +188,27 @@ sub test_four {
 
   $applet->gconf_set_float ('_key', 2.0);
   is ($applet->gconf_get_float ('_key'), 2.0);
+
+  _show_results ($$output_ref);
+}
+
+sub test_five {
+  my ($component, $applet, $verb) = @_;
+
+  my $output_ref = _setup_output (my $fh);
+
+  if (Gnome2::PanelApplet->CHECK_VERSION(2, 10, 0)) {
+    my $locked_down = $applet->get_locked_down ();
+    ok(defined $locked_down, "locked down: $locked_down");
+
+    $applet->request_focus(0);
+    ok(TRUE, 'requested focus');
+  }
+
+  if (Gnome2::PanelApplet->CHECK_VERSION(2, 14, 0)) {
+    $applet->set_background_widget(Gtk2::Button->new ('Huh'));
+    ok(TRUE, 'set background widget');
+  }
 
   _show_results ($$output_ref);
 }
