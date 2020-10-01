@@ -32,6 +32,8 @@ unless (eval "use ExtUtils::Depends '$perl_reqs{'ExtUtils::Depends'}';"
            . "1") {
   warn "$@\n";
   WriteMakefile(
+    # don't clobber the existing META.yml
+    NO_META      => 1,
     PREREQ_FATAL => 1,
     PREREQ_PM    => \%perl_reqs,
   );
@@ -82,11 +84,8 @@ WriteMakefile(
   XSPROTOARG    => '-noprototypes',
   MAN3PODS      => \%pod_files,
   PREREQ_PM     => \%perl_reqs,
-
-  META_MERGE    => {
-    configure_requires => \%perl_reqs,
-  },
-
+  # don't clobber the existing META.yml
+  NO_META      => 1,
   $dep->get_makefile_vars,
 );
 
