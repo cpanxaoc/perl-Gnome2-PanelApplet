@@ -13,7 +13,7 @@ require DynaLoader;
 
 our @ISA = qw(DynaLoader);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 sub import {
   my $self = shift();
@@ -47,7 +47,7 @@ __END__
 
 =head1 NAME
 
-Gnome2::PanelApplet - Perl interface to GNOME's applet library
+Gnome2::PanelApplet - (DEPRECATED) Perl interface to GNOME's applet library
 
 =head1 SYNOPSIS
 
